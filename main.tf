@@ -4,6 +4,40 @@ provider "aws" {
 
 data "aws_availability_zones" "all" {}
 
+/*
+resource "aws_s3_bucket" "cluster-statefile" {
+  bucket = "cluster-statefile"
+
+  versioning {
+    enabled = true
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags {
+    Name = "S3 Remote Terraform State Store"
+  }
+}
+*/
+
+resource "aws_dynamodb_table" "dynamodb-statefile" {
+  name           = "dynamodb-statefile"
+  hash_key       = "LockID"
+  read_capacity  = 20
+  write_capacity = 20
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags {
+    Name = "DynamoDB Terraform State Lock Table"
+  }
+}
+
 resource "aws_launch_configuration" "cluster" {
   image_id        = "ami-0bdf93799014acdc4"
   instance_type   = "t2.micro"
@@ -101,4 +135,8 @@ resource "aws_autoscaling_group" "cluster-asg" {
 
 output "elb_dns_name" {
   value = "${aws_elb.cluster-elb.dns_name}"
+}
+
+output "s3_bucket_arn" {
+  value = "${aws_s3_bucket.cluster-statefile.arn}"
 }
