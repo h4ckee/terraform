@@ -1,14 +1,11 @@
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  default     = 8080
+variable "log_location_prefix" {
+  default = "my-lb-logs"
 }
 
-variable "lb_ingress_port" {
-  description = "The port the load balancer will use for HTTP requests"
-  default     = 80
+variable "region" {
+  default = "eu-central-1"
 }
 
-variable "lb_egress_port" {
-  description = "The port the load balancer will use for health checks"
-  default     = 0
+variable "log_bucket_name" {
+  default = "test-log-bucket"
 }
